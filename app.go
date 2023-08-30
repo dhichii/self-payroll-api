@@ -60,7 +60,11 @@ func (s *server) Run() {
 	companyGroup := s.httpServer.Group("/company")
 	companyDelivery.Mount(companyGroup)
 
-	// TODO: panggil user repository, user usecase, user derlivery, dan mount ke router
+	userRepo := repository.NewUserRepository(s.cfg)
+	userUseCase := usecase.NewUserUsecase(userRepo, positionRepo, companyRepo)
+	userDelivery := delivery.NewUserDelivery(userUseCase)
+	userGroup := s.httpServer.Group("/employee")
+	userDelivery.Mount(userGroup)
 
 	transactionRepo := repository.NewTransactionRepository(s.cfg)
 	transactionUsecase := usecase.NewTransactionUsecase(transactionRepo)
